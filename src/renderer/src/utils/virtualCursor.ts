@@ -46,6 +46,34 @@ export function createVirtualCursor(deps: CursorDeps) {
   let hideTimeout: ReturnType<typeof setTimeout> | null = null
   const HIDE_DELAY = 1500
   const CURSOR_SIZE = 28
+  let lastHoveredEl: HTMLElement | null = null
+
+  function clearHostHover(): void {
+    if (lastHoveredEl) {
+      lastHoveredEl.dispatchEvent(new MouseEvent('mouseout', { bubbles: true }))
+      lastHoveredEl.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }))
+      lastHoveredEl = null
+    }
+  }
+
+  function updateHostHover(): void {
+    const px = Math.round(x + CURSOR_SIZE / 2)
+    const py = Math.round(y + CURSOR_SIZE / 2)
+    const hit = document.elementFromPoint(px, py) as HTMLElement | null
+    const target = hit?.closest('.key-btn, .toolbar-btn, .close-btn, .tab-item, button') as HTMLElement | null
+
+    if (target === lastHoveredEl) return
+
+    if (lastHoveredEl) {
+      lastHoveredEl.dispatchEvent(new MouseEvent('mouseout', { bubbles: true }))
+      lastHoveredEl.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }))
+    }
+    if (target) {
+      target.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))
+      target.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }))
+    }
+    lastHoveredEl = target
+  }
 
   function show(): void {
     visible = true
@@ -60,10 +88,12 @@ export function createVirtualCursor(deps: CursorDeps) {
       clearTimeout(hideTimeout)
       hideTimeout = null
     }
+    clearHostHover()
     updateCursor(x, y, false)
   }
 
   function reset(): void {
+    clearHostHover()
     const b = getBounds()
     if (b.width === 0 || b.height === 0) {
       updateCursor(0, 0, false)
@@ -80,7 +110,9 @@ export function createVirtualCursor(deps: CursorDeps) {
 
     x = Math.max(0, Math.min(b.width - CURSOR_SIZE, x + dx))
     y = Math.max(0, Math.min(b.height - CURSOR_SIZE, y + dy))
-  
+
+    updateHostHover()
+
     const id = deps.getActiveTabId()
     if (id) {
       const wv = deps.getWebview(id)
@@ -92,6 +124,13 @@ export function createVirtualCursor(deps: CursorDeps) {
   }
 
   function click(): void {
+    if (lastHoveredEl) {
+      lastHoveredEl.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, button: 0 }))
+      lastHoveredEl.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, button: 0 }))
+      lastHoveredEl.click()
+      return
+    }
+
     const id = deps.getActiveTabId()
     if (!id) return
     const wv = deps.getWebview(id)
