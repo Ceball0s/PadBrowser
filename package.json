@@ -1,0 +1,53 @@
+{
+  "name": "padbrowser",
+  "version": "1.0.0",
+  "description": "Navegador TV-friendly construido con Electron",
+  "main": "./out/main/index.js",
+  "scripts": {
+    "build:pages": "astro build",
+    "dev": "npm run build:pages && electron-vite dev",
+    "build": "npm run build:pages && electron-vite build",
+    "preview": "electron-vite preview",
+    "pack:win": "npm run build && electron-builder --win",
+    "pack:linux": "npm run build && electron-builder --linux",
+    "pack:all": "npm run build && electron-builder --win --linux",
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json",
+    "typecheck:web": "vue-tsc --noEmit -p tsconfig.web.json",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web"
+  },
+  "build": {
+    "appId": "com.padbrowser.app",
+    "productName": "PadBrowser",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "out/**/*"
+    ],
+    "icon": "src/assets/icon.ico",
+    "win": {
+      "target": "nsis",
+      "icon": "src/assets/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "resources/"
+    }
+  },
+  "dependencies": {
+    "@electron-toolkit/utils": "^4.0.0",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "astro": "^4.16.19",
+    "electron-vite": "^5.0.0",
+    "typescript": "^6.0.3",
+    "vue": "^3.5.39",
+    "vue-tsc": "^3.3.6"
+  },
+  "devDependencies": {
+    "electron": "^41.7.1",
+    "electron-builder": "^25.1.8"
+  }
+}

@@ -1,0 +1,37 @@
+---
+interface Props {
+  title: string
+}
+const { title } = Astro.props
+---
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="color-scheme" content="dark" />
+  <title>{title}</title>
+  <style is:global>
+    :root {
+      --bg: #141026;
+      --surface: #1d163a;
+      --surface-hover: #28214d;
+      --surface-active: #352d5a;
+      --accent: #ff2255;
+      --accent-dim: #c91b44;
+      --text: #f0eef5;
+      --text-dim: #b0aac8;
+      --cyan: #00d4ff;
+      --orange: #ff6a00;
+      --danger: #ff2040;
+      --border: #2a2440;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;font-size:24px;user-select:none;overflow:hidden;background:var(--bg);color:var(--text)}
+    button{font-family:inherit;font-size:inherit;outline:none;cursor:pointer}
+    input{font-family:inherit;font-size:inherit}
+  </style>
+</head>
+<body>
+  <slot />
+</body>
+</html>

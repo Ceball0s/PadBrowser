@@ -1,0 +1,324 @@
+---
+import Layout from '../components/Layout.astro'
+import ControllerDiagram from '../components/ControllerDiagram.astro'
+
+const diagramPointers = [
+  { id: 'lb', startX: -20, startY: 0, dotX: 31, dotY: 19 },
+  { id: 'lt', startX: -20, startY: 35, dotX: 31, dotY: 28 },
+  { id: 'ls', startX: -20, startY: 75, dotX: 29, dotY: 57 },
+  { id: 'dpad', startX: -20, startY: 100, dotX: 39.5, dotY: 71 },
+  
+  { id: 'rb', startX: 120, startY: 0, dotX: 68, dotY: 19 },
+  { id: 'rt', startX: 120, startY: 35, dotX: 67, dotY: 28 },
+  { id: 'abxy', startX: 120, startY: 75, dotX: 71, dotY: 57.5 },
+  { id: 'rs', startX: 120, startY: 100, dotX: 60.7, dotY: 70 }
+];
+---
+
+<Layout title="Guía de Controles - Opera GX Style">
+  <div class="gx-container">
+    
+    <header class="gx-header">
+      <div class="gx-title-wrapper">
+        <h1 data-i18n="tutorial.heading">Guía de Controles</h1>
+        <span class="gx-title-bar"></span>
+      </div>
+      <button class="gx-close-btn" data-action="close" aria-label="Cerrar" data-i18n-arialabel="tutorial.close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+
+    <main class="gx-main-content">
+      
+      <div class="gx-row-item left slide-left" style="grid-row: 1; grid-column: 1;">
+        <svg class="gx-ilustration" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
+        <p class="gx-explain-text" data-i18n="tutorial.closeTab">Cierra pestaña actual</p>
+        <span class="gx-btn-spec">LT</span>
+      </div>
+
+      <div class="gx-row-item left slide-left" style="grid-row: 2; grid-column: 1;">
+        <svg class="gx-ilustration" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <p class="gx-explain-text" data-i18n="tutorial.prevTab">Pestaña izquierda</p>
+        <span class="gx-btn-spec">LB</span>
+      </div>
+
+      <div class="gx-row-item left slide-left" style="grid-row: 3; grid-column: 1;">
+        <svg class="gx-ilustration" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+        <p class="gx-explain-text" data-i18n="tutorial.clickPointer">Click y puntero</p>
+        <span class="gx-btn-spec">LS</span>
+      </div>
+
+      <div class="gx-row-item left slide-left" style="grid-row: 4; grid-column: 1;">
+        <svg class="gx-ilustration" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="5 12 12 5 19 12"/><polyline points="5 19 12 12 19 19"/></svg>
+        <p class="gx-explain-text" data-i18n="tutorial.navigate">Saltar entre elementos</p>
+        <span class="gx-btn-spec">DPAD</span>
+      </div>
+
+      <section class="gx-diagram-wrapper" style="grid-row: span 4; grid-column: 2;">
+        <ControllerDiagram pointers={diagramPointers} />
+      </section>
+
+      <div class="gx-row-item right slide-right" style="grid-row: 1; grid-column: 3;">
+        <span class="gx-btn-spec">RT</span>
+        <p class="gx-explain-text" data-i18n="tutorial.newTab">Crear nueva pestaña</p>
+        <svg class="gx-ilustration" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </div>
+
+      <div class="gx-row-item right slide-right" style="grid-row: 2; grid-column: 3;">
+        <span class="gx-btn-spec">RB</span>
+        <p class="gx-explain-text" data-i18n="tutorial.nextTab">Pestaña derecha</p>
+        <svg class="gx-ilustration" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+
+      <div class="gx-row-item right complex slide-right" style="grid-row: 3; grid-column: 3;">
+        <div class="gx-abxy-container">
+          <div class="gx-abxy-grid">
+            <span class="mini-btn y">Y</span>
+            <div class="h-row">
+              <span class="mini-btn x">X</span>
+              <span class="mini-btn b">B</span>
+            </div>
+            <span class="mini-btn a">A</span>
+          </div>
+        </div>
+        <div class="gx-explain-text multiple">
+          <p><strong>A:</strong> <span data-i18n="tutorial.aClick">Clic</span> | <strong>B:</strong> <span data-i18n="tutorial.bBack">Atrás</span></p>
+          <p><strong>X:</strong> <span data-i18n="tutorial.xForward">Adelante</span> | <strong>Y:</strong> <span data-i18n="tutorial.yUrl">URL</span></p>
+        </div>
+      </div>
+
+      <div class="gx-row-item right slide-right" style="grid-row: 4; grid-column: 3;">
+        <span class="gx-btn-spec">RS</span>
+        <p class="gx-explain-text" data-i18n="tutorial.scroll">Scroll fluido</p>
+        <svg class="gx-ilustration" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+      </div>
+
+    </main>
+
+    <footer class="gx-footer">
+      <button class="gx-submit-btn" data-action="close">
+        <span data-i18n="tutorial.submit">¡Entendido, a navegar!</span>
+      </button>
+    </footer>
+  </div>
+</Layout>
+
+<script is:inline>
+  void function(){
+    document.querySelectorAll('[data-action]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        window.location.href = 'app-home://home';
+      });
+    });
+  }();
+</script>
+
+<style is:inline>
+  :root {
+    --gx-deep-space: #050609;   
+    --gx-dark-surface: #0f121a; 
+    --gx-neon-red: #fa1e4e;     
+    --gx-crimson: #940f2a;      
+    --gx-text-pure: #ffffff;
+    --gx-text-muted: #838996;
+  }
+
+  .gx-container {
+    box-sizing: border-box;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at 50% 45%, #220c12 0%, var(--gx-deep-space) 75%);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: var(--gx-text-pure);
+    display: flex;
+    flex-direction: column;
+    padding: 3vh 4vw;
+    overflow: hidden;
+  }
+
+  .gx-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 6vh;
+  }
+  .gx-title-wrapper { position: relative; }
+  .gx-header h1 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0;
+  }
+  .gx-title-bar {
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 35px;
+    height: 3px;
+    background: var(--gx-neon-red);
+    box-shadow: 0 0 8px var(--gx-neon-red);
+  }
+  .gx-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--gx-text-muted);
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.2s;
+  }
+  .gx-close-btn:hover { color: var(--gx-neon-red); }
+  .gx-close-btn svg { width: 1.4rem; height: 1.4rem; }
+
+  /* SISTEMA DE REJILLA EN 4 FILAS PERFECTAS */
+  .gx-main-content {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 26% 48% 26%;
+    grid-template-rows: repeat(4, 1fr);
+    gap: 10px;
+    align-items: center;
+    max-height: 76vh;
+    margin-top: 2vh;
+  }
+
+  /* ESTRUCTURA FLOTANTE */
+  .gx-row-item {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    width: 100%;
+    height: 100%;
+  }
+  .gx-row-item.left { justify-content: flex-end; text-align: right; }
+  .gx-row-item.right { justify-content: flex-start; text-align: left; }
+
+  /* TEXTO Y CURSOR */
+  .gx-explain-text {
+    font-size: 0.85rem;
+    color: var(--gx-text-muted);
+    margin: 0;
+    line-height: 1.3;
+  }
+  .gx-flex-text {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+  .gx-cursor-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--gx-text-pure);
+  }
+  .gx-explain-text.multiple p { margin: 2px 0; font-size: 0.8rem; }
+  .gx-explain-text strong { color: var(--gx-neon-red); }
+
+  /* ICONOS DE CONTROL RESTAURADOS */
+  .gx-icon-box {
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; color: #fff; font-size: 0.65rem;
+    width: 2.3rem; height: 1.3rem;
+    background: #0b0d13;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .gx-icon-box.trigger { border-radius: 2px 2px 5px 5px; }
+
+  .gx-stick-box {
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.65rem;
+    width: 2.5rem; height: 2.5rem; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #1c202e, #07080c);
+    border: 1px solid rgba(250, 30, 78, 0.3);
+    flex-shrink: 0;
+  }
+  .gx-dpad { width: 2.2rem; height: 2.2rem; color: var(--gx-text-muted); flex-shrink: 0; }
+
+  /* EXCEPCIÓN ABXY */
+  .gx-row-item.complex {
+    background: rgba(15, 18, 26, 0.55);
+    border: 1px solid rgba(250, 30, 78, 0.1);
+    backdrop-filter: blur(8px);
+    padding: 10px;
+    border-radius: 4px;
+    height: auto;
+  }
+  .gx-abxy-container {
+    padding-right: 12px;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .gx-abxy-grid { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .gx-abxy-grid .h-row { display: flex; gap: 10px; }
+  .mini-btn {
+    width: 1.2rem; height: 1.2rem; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 0.65rem; color: #fff;
+  }
+  .mini-btn.a { background: #2e7d32; }
+  .mini-btn.b { background: #c62828; }
+  .mini-btn.x { background: #1565c0; }
+  .mini-btn.y { background: #fbc02d; color: #000; }
+
+  .gx-diagram-wrapper { width: 100%; height: 100%; }
+
+  /* FOOTER */
+  .gx-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    margin-top: auto;
+  }
+  .gx-submit-btn {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    padding: 0.85rem 4rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, var(--gx-neon-red) 0%, var(--gx-crimson) 100%);
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    box-shadow: 0 4px 15px rgba(250, 30, 78, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .gx-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(250, 30, 78, 0.55);
+  }
+  .gx-submit-btn svg { width: 1rem; height: 1rem; }
+
+  /* ANIMACIONES */
+  @keyframes slideInLeft { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes slideInRight { from { opacity: 0; transform: translateX(15px); } to { opacity: 1; transform: translateX(0); } }
+  .slide-left { animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .slide-right { animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+  .gx-ilustration {
+    width: 1rem; 
+    height: 1rem;
+    color: var(--gx-text-muted);
+    opacity: 0.6;
+    flex-shrink: 0;
+    transition: opacity 0.2s;
+  }
+  
+  .gx-row-item:hover .gx-ilustration {
+    color: var(--gx-neon-red);
+    opacity: 1;
+  }
+
+  .gx-btn-spec {
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: var(--gx-text-pure);
+    background: rgba(255,255,255,0.05);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+</style>

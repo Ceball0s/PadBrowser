@@ -1,0 +1,289 @@
+---
+import Layout from '../components/Layout.astro'
+---
+<Layout title="Descargas">
+  <div class="steam-homepage dl-page has-custom-focus" id="hp">
+    <div class="header">
+      <div class="title-section">
+        <h1 data-i18n="downloadsPage.title">Descargas</h1>
+      </div>
+      <div class="hdr-btns">
+        <button class="clear-btn" id="clearBtn" data-action="clear-downloads" tabindex="0" data-i18n="downloadsPage.clear">Limpiar</button>
+        <button class="close-btn" data-action="close" aria-label="Cerrar" data-i18n-arialabel="downloadsPage.close" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="dlContainer" class="steam-scroll-container"></div>
+  </div>
+
+  <script id="init-data" type="application/json">[]</script>
+
+  <script is:inline>
+  void function(){
+    var script = document.getElementById('init-data');
+    var downloads = JSON.parse(script.textContent);
+
+    function renderItem(d) {
+      var pct = d.total > 0 ? Math.min(100, Math.round(d.received / d.total * 100)) : 0;
+      return '<div class="steam-card dl-item" data-id="' + (d.id || '') + '" data-path="' + (d.path || '').replace(/"/g, '&quot;') + '" tabindex="0">' +
+        '<div class="dl-info">' +
+          '<span class="dl-name">' + (d.name || '').replace(/</g, '&lt;') + '</span>' +
+          '<div class="pw"><div class="pb' + (d.done ? ' done' : '') + '" style="width:' + pct + '%"></div></div>' +
+          '<span class="dl-status">' + (d.done ? window.__t('downloadsPage.completed') : d.total > 0 ? Math.round(d.received / 1024) + ' / ' + Math.round(d.total / 1024) + ' KB' : window.__t('downloadsPage.downloading')) + '</span>' +
+        '</div>' +
+        (d.done && d.path ? '<button class="open-btn" data-action="open" data-path="' + (d.path || '').replace(/"/g, '&quot;') + '" tabindex="-1">' + window.__t('downloadsPage.open') + '</button>' : '') +
+      '</div>';
+    }
+
+    function renderEmpty() {
+      return '<div class="hist-empty">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:40px;height:40px;margin-bottom:12px;opacity:0.3;">' +
+          '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>' +
+          '<polyline points="7 10 12 15 17 10"/>' +
+          '<line x1="12" y1="15" x2="12" y2="3"/>' +
+        '</svg>' +
+        '<p>' + window.__t('downloadsPage.empty') + '</p>' +
+      '</div>';
+    }
+
+    function render() {
+      var container = document.getElementById('dlContainer');
+      if (!container) return;
+      if (downloads.length === 0) {
+        container.innerHTML = renderEmpty();
+        return;
+      }
+      container.innerHTML = '<div class="steam-track dl-track">' + downloads.map(renderItem).join('') + '</div>';
+    }
+
+    function handleAction(action, value) {
+      window.location.hash = '#action/' + action + (value ? '/' + encodeURIComponent(value) : '');
+    }
+
+    // SOLUCIÓN: Escuchador global delegando eventos. No le importa si el HTML cambia o se re-renderiza.
+    document.addEventListener('click', function(e) {
+      var target = e.target.closest('[data-action]');
+      if (!target) return;
+
+      var action = target.dataset.action;
+      
+      if (action === 'close') {
+        handleAction('close');
+      } else if (action === 'clear-downloads') {
+        handleAction('clear-downloads');
+      } else if (action === 'open') {
+        handleAction('open', target.dataset.path || '');
+      }
+    });
+
+    // Delegación para clicks o ENTER dentro de las tarjetas de descarga
+    document.addEventListener('click', function(e) {
+      var item = e.target.closest('.dl-item');
+      if (item && !e.target.closest('[data-action="open"]')) {
+        var openBtn = item.querySelector('[data-action="open"]');
+        if (openBtn) handleAction('open', openBtn.dataset.path || '');
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        var cur = document.activeElement;
+        if (!cur) return;
+        
+        // Si damos enter en un botón con acción directa (Cerrar o Limpiar)
+        if (cur.dataset.action) {
+          handleAction(cur.dataset.action, cur.dataset.path || '');
+        } 
+        // Si damos enter en la tarjeta de descarga
+        else if (cur.classList.contains('dl-item')) {
+          var openBtn = cur.querySelector('[data-action="open"]');
+          if (openBtn) handleAction('open', openBtn.dataset.path || '');
+        }
+      }
+    });
+
+    window.__updateDownloads = function(list) {
+      downloads = list;
+      render();
+    };
+
+    window.__updateDownloadProgress = function(data) {
+      var idx = -1;
+      for (var i = 0; i < downloads.length; i++) {
+        if (downloads[i].id === data.id) { idx = i; break; }
+      }
+      if (idx >= 0) {
+        downloads[idx].received = data.received;
+        downloads[idx].total = data.total;
+      } else {
+        downloads.push({ id: data.id, name: data.name || window.__t('downloadsPage.file'), path: '', received: data.received, total: data.total, done: false });
+      }
+      var item = document.querySelector('.dl-item[data-id="' + data.id + '"]');
+      if (item) {
+        var bar = item.querySelector('.pb');
+        if (bar) { bar.classList.remove('done'); bar.style.width = data.total > 0 ? Math.min(100, Math.round(data.received / data.total * 100)) + '%' : '0%'; }
+        var status = item.querySelector('.dl-status');
+        if (status) status.textContent = data.total > 0 ? Math.round(data.received / 1024) + ' / ' + Math.round(data.total / 1024) + ' KB' : window.__t('downloadsPage.downloading');
+      } else {
+        render();
+      }
+    };
+
+    window.__updateDownloadDone = function(data) {
+      for (var i = 0; i < downloads.length; i++) {
+        if (downloads[i].id === data.id) {
+          downloads[i].done = data.success;
+          downloads[i].path = data.path;
+          render();
+          break;
+        }
+      }
+    };
+
+    render();
+  }();
+  </script>
+
+  <style is:global>
+  :root {
+    --steam-bg: #080c11;
+    --steam-blue: #66c0f4;
+    --steam-glow: rgba(102,192,244,0.12);
+  }
+
+  .dl-page {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    background: radial-gradient(circle at 50% -20%, var(--steam-glow) 0%, rgba(8, 12, 17, 0.42) 60%, var(--steam-bg) 90%);
+    display: flex;
+    flex-direction: column;
+    padding: 50px 80px;
+    overflow: hidden;
+    color: #f3f3f3;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px 20px 15px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.04);
+    margin-bottom: 20px;
+  }
+  .header h1 {
+    font-size: 14px;
+    font-weight: 800;
+    color: #a4b4c4;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .hdr-btns { display: flex; align-items: center; gap: 12px; }
+
+  .clear-btn {
+    padding: 8px 18px;
+    background: rgba(11, 19, 28, 0.75);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: #8291a1;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .has-custom-focus .clear-btn:focus {
+    outline: none !important;
+    border-color: rgba(102, 192, 244, 0.6) !important;
+    color: #fff;
+    box-shadow: 0 0 12px rgba(102, 192, 244, 0.3) !important;
+  }
+
+  .close-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    background: rgba(11, 19, 28, 0.75);
+    color: #8291a1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .has-custom-focus .close-btn:focus {
+    outline: none !important;
+    border-color: rgba(102, 192, 244, 0.6) !important;
+    color: #fff;
+    box-shadow: 0 0 12px rgba(102, 192, 244, 0.3) !important;
+  }
+  .close-btn svg { width: 16px; height: 16px; }
+
+  .dl-track {
+    flex-direction: column;
+    overflow-y: auto !important;
+    max-height: calc(100vh - 180px);
+    gap: 14px;
+    padding: 10px 15px;
+  }
+  .dl-track::-webkit-scrollbar { display: none; }
+
+  .steam-card {
+    position: relative;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    transition: all 0.2s cubic-bezier(0.15, 0.85, 0.45, 1);
+  }
+
+  .dl-item {
+    width: 100%;
+    height: auto;
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 26px;
+    background: #11151d;
+  }
+
+  /* SUAVIZADO DEL FOCO EN FILAS DE DESCARGAS (Sin escala exagerada) */
+  .has-custom-focus .dl-item:focus {
+    outline: none !important;
+    transform: scale(1.006) !important;
+    border-color: rgba(102, 192, 244, 0.6) !important;
+    box-shadow: 0 0 15px rgba(102, 192, 244, 0.25) !important;
+    z-index: 5;
+  }
+
+  .dl-info { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .dl-name { font-size: 15px; font-weight: 700; color: #f0f4f8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .pw { height: 6px; background: rgba(0, 0, 0, 0.4); border-radius: 4px; overflow: hidden; width: 100%; }
+  .pb { height: 100%; background: var(--steam-blue); border-radius: 4px; transition: width 0.3s ease; }
+  .pb.done { background: #5c7e10; }
+
+  .dl-status { font-size: 12px; color: #6d7f92; font-weight: 500; }
+
+  .open-btn {
+    margin-left: 24px;
+    padding: 8px 20px;
+    background: #1b2838;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  /* Cambio de color cuando su contenedor padre tiene foco */
+  .dl-item:focus .open-btn { background: #fff; color: #000; border-color: #fff; }
+
+  .hist-empty { color: #526375; font-size: 14px; padding: 40px; text-align: center; width: 100%; }
+  </style>
+</Layout>

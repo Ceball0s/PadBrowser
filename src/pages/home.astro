@@ -1,0 +1,393 @@
+---
+import Layout from '../components/Layout.astro'
+---
+<Layout title="Inicio">
+  <div class="steam-homepage has-custom-focus" id="hp">
+    
+    <div class="steam-search-bar">
+      <div class="search-box" id="searchBox">
+        <input type="text" id="qs" class="cs-input" placeholder="Buscar o introducir URL..." data-i18n-placeholder="home.searchPlaceholder" />
+        <span class="search-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="steam-section">
+      <h2 data-i18n="home.favorites">Favoritos</h2>
+      <div class="steam-scroll-container">
+        <div class="steam-track" id="carTrack"></div>
+      </div>
+    </div>
+
+    <div class="steam-section hist-section">
+      <h2 data-i18n="home.recentHistory">Historial Reciente</h2>
+      <div class="steam-scroll-container">
+        <div class="steam-track hist-track" id="histTrack"></div>
+      </div>
+    </div>
+  </div>
+
+  <script id="init-data" type="application/json">
+  {
+    "favorites": [
+      {
+        "name": "YouTube",
+        "url": "https://youtube.com",
+        "image": "https://cdn2.steamgriddb.com/thumb/5abf35c5c2942fe61d26936a6846c5be.jpg",
+        "accent": "#ff0000",
+        "accentGlow": "rgba(255, 0, 0, 0.2)"
+      },
+      {
+        "name": "Netflix",
+        "url": "https://netflix.com",
+        "image": "https://cdn2.steamgriddb.com/thumb/675c8e63d3d9cdbd3af716b4a5a371be.jpg",
+        "accent": "#e50914",
+        "accentGlow": "rgba(229, 9, 20, 0.2)"
+      },
+      {
+        "name": "Prime Video",
+        "url": "https://primevideo.com",
+        "image": "https://cdn2.steamgriddb.com/thumb/10c8f12e1fb3ed73b09ec0311a269a42.jpg",
+        "accent": "#00a8e1",
+        "accentGlow": "rgba(0, 168, 225, 0.2)"
+      },
+      {
+        "name": "Max",
+        "url": "https://max.com",
+        "image": "https://cdn2.steamgriddb.com/thumb/27d049f461720c8fbc869279e7da7e41.jpg",
+        "accent": "#002be7",
+        "accentGlow": "rgba(0, 43, 231, 0.2)"
+      },
+      {
+        "name": "Twitch",
+        "url": "https://twitch.tv",
+        "image": "https://cdn2.steamgriddb.com/thumb/43b0ede81ad6ac697a55c506e93e3075.jpg",
+        "accent": "#9146ff",
+        "accentGlow": "rgba(145, 70, 255, 0.2)"
+      },
+      {
+        "name": "Kodi Media Center",
+        "url": "http://localhost:8080",
+        "image": "https://cdn2.steamgriddb.com/thumb/a92ab72c9f6093ab1488d54b96aff511.jpg",
+        "accent": "#17B2E7",
+        "accentGlow": "rgba(23, 178, 231, 0.2)"
+      },
+      {
+        "name": "romsdl",
+        "url": "https://romsdl.com/roms"
+      }
+    ],
+    "recentHistory": []
+  }
+  </script>
+
+  <script is:inline>
+  void function(){
+    var script = document.getElementById('init-data');
+    var data = JSON.parse(script.textContent);
+    var favorites = data.favorites || [];
+    var recentHistory = data.recentHistory || [];
+
+    function escape(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function getInitials(s) { return (s || '?').substring(0, 2).toUpperCase(); }
+
+    window.buildCarousel = function() {
+      return favorites.map(function(item, idx) {
+        var hasImage = !!item.image;
+        var bg, accent, accentGlow;
+        if (hasImage) {
+          bg = "url('" + escape(item.image) + "') center/cover no-repeat";
+          accent = escape(item.accent || '#66c0f4');
+          accentGlow = escape(item.accentGlow || 'rgba(102,192,244,0.15)');
+        } else {
+          var hue = Math.floor(Math.random() * 360);
+          bg = escape('hsl(' + hue + ', 80%, 45%)');
+          accent = 'hsl(' + hue + ', 100%, 50%)';
+          accentGlow = 'hsla(' + hue + ', 100%, 50%, 0.15)';
+        }
+        var initialsHtml = hasImage ? '' : '<div class="fav-initials">' + getInitials(item.name) + '</div>';
+        return '<div class="steam-card fav-card" data-index="' + idx + '" data-url="' + escape(item.url) + '" data-accent="' + accent + '" data-accent-glow="' + accentGlow + '" style="background:' + bg + '" tabindex="0">' +
+          initialsHtml +
+          '<div class="card-overlay">' +
+            '<span class="card-label">' + escape(item.name) + '</span>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function isInternal(url) {
+      return !url || url === 'about:blank' || url.startsWith('app-home://') || url.startsWith('app-drift://');
+    }
+
+    function buildHistoryTrack() {
+      var filtered = recentHistory.filter(function(item) { return !isInternal(item.url); });
+      if (filtered.length === 0) {
+        return '<div class="hist-empty">' + window.__t('home.noHistory') + '</div>';
+      }
+      return filtered.map(function(item, idx) {
+        var bannerHtml;
+        if (item.screenshot) {
+          bannerHtml = '<div class="hist-banner" style="background:url(\'' + escape(item.screenshot) + '\') center/cover no-repeat"></div>';
+        } else {
+          bannerHtml = '<div class="hist-banner banner-placeholder">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
+              '<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>' +
+            '</svg></div>';
+        }
+        return '<div class="steam-card hist-card" data-index="' + idx + '" data-url="' + escape(item.url) + '" tabindex="0">' +
+          bannerHtml +
+          '<div class="hist-meta">' +
+            '<span class="hist-title">' + escape(item.title || item.url) + '</span>' +
+            '<span class="hist-url">' + escape(item.url) + '</span>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function searchGo() {
+      var q = document.getElementById('qs').value.trim();
+      if (!q) return;
+      if (q.startsWith('http://') || q.startsWith('https://')) window.location.href = q;
+      else if (q.includes('.')) window.location.href = 'https://' + q;
+      else window.location.href = 'https://www.google.com/search?q=' + encodeURIComponent(q);
+    }
+
+    function init() {
+      document.getElementById('carTrack').innerHTML = buildCarousel();
+      document.getElementById('histTrack').innerHTML = buildHistoryTrack();
+      document.getElementById('qs').focus();
+    }
+    init();
+
+    window.__updateHistory = function(entries) {
+      recentHistory = entries || [];
+      var track = document.getElementById('histTrack');
+      if (track) track.innerHTML = buildHistoryTrack();
+    };
+
+    window.__updateFavorites = function(newFavorites) {
+      favorites = newFavorites || [];
+      var track = document.getElementById('carTrack');
+      if (track) track.innerHTML = buildCarousel();
+    };
+
+    document.addEventListener('click', function(e) {
+        var card = e.target.closest('.steam-card');
+        if (card && card.dataset.url) {
+            window.location.href = card.dataset.url;
+        }
+    });
+
+    document.addEventListener('focusin', function(e) {
+      var target = e.target;
+      if (target.id === 'qs') {
+        document.getElementById('searchBox').classList.add('focused');
+        document.getElementById('hp').style.setProperty('--steam-glow', 'rgba(229, 9, 20, 0.08)');
+      }
+      if (target.classList.contains('steam-card')) {
+        var glow = target.getAttribute('data-accent-glow') || 'rgba(102,192,244,0.1)';
+        var accent = target.getAttribute('data-accent') || '#66c0f4';
+        document.getElementById('hp').style.setProperty('--steam-glow', glow);
+        target.style.setProperty('--card-accent', accent);
+      }
+    });
+
+    document.addEventListener('focusout', function(e) {
+      if (e.target.id === 'qs') document.getElementById('searchBox').classList.remove('focused');
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        var cur = document.activeElement;
+        if (cur.id === 'qs') searchGo();
+        else if (cur.classList.contains('steam-card') && cur.dataset.url) window.location.href = cur.dataset.url;
+      }
+    });
+  }();
+  </script>
+
+  <style is:global>
+  :root {
+    --steam-bg: #080c11;
+    --steam-blue: #66c0f4;
+    --steam-red: #e50914;
+    --steam-glow: rgba(102,192,244,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .steam-homepage {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    background: radial-gradient(circle at 50% -20%, var(--steam-glow) 0%, rgba(8, 12, 17, 0.42) 60%, var(--steam-bg) 90%);
+    display: flex;
+    flex-direction: column;
+    padding: 50px 80px;
+    overflow: hidden;
+    color: #f3f3f3;
+    font-family: system-ui, -apple-system, sans-serif;
+    transition: background 0.4s ease-out;
+  }
+
+  h2 {
+    font-size: 14px;
+    font-weight: 800;
+    color: #a4b4c4;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0 0 20px 15px;
+  }
+
+  .steam-search-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 45px;
+    width: 100%;
+  }
+
+  /* INTERFAZ BASE DE LA CAJA */
+  .search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(11, 19, 28, 0.75);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    width: 50%;
+    min-width: 500px;
+    padding: 12px 24px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Línea profesional en la parte inferior (Oculta por defecto) */
+  .search-box::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--steam-red);
+    transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 2px;
+  }
+
+  /* NUEVO EFECTO: Enfocado con resplandor rojo dinámico (Netflix style) sin lag */
+  .has-custom-focus .search-box.focused,
+  .search-box.focused {
+    outline: none !important;
+    border-color: rgba(225, 9, 20, 0.25) !important;
+    background: rgba(15, 22, 32, 0.85);
+    animation: netflixPulse 3s infinite alternate ease-in-out;
+  }
+
+  /* Despliega la línea inferior desde el centro cuando se enfoca */
+  .search-box.focused::after {
+    width: calc(100% + 4px); /* Cubre los bordes laterales perfectamente */
+    left: -2px;
+  }
+
+  .search-icon { margin-left: 16px; color: #8291a1; transition: color 0.3s; }
+  .search-box.focused .search-icon { color: var(--steam-red); }
+
+  /* EL INPUT INTERNO */
+  .cs-input,
+  body *:focus.cs-input,
+  body:not(.has-custom-focus) .cs-input:focus {
+    flex: 1;
+    background: transparent !important;
+    border: none !important;
+    outline: 0px solid transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: #fff;
+    font-size: 16px;
+  }
+
+  /* Animación nativa acelerada por GPU para el pulso de iluminación */
+  @keyframes netflixPulse {
+    0% {
+      box-shadow: 0 0 12px rgba(229, 9, 20, 0.15), inset 0 0 6px rgba(229, 9, 20, 0.05);
+    }
+    100% {
+      box-shadow: 0 0 24px rgba(229, 9, 20, 0.35), inset 0 0 12px rgba(229, 9, 20, 0.1);
+    }
+  }
+
+  .steam-section { margin-bottom: 40px; width: 100%; }
+  .steam-scroll-container { width: 100%; overflow: visible; }
+  .steam-track { display: flex; gap: 28px; padding: 15px 15px 35px 15px; overflow-x: auto; }
+  .steam-track::-webkit-scrollbar { display: none; }
+
+  .steam-card {
+    position: relative;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #111720;
+    flex-shrink: 0;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    transition: all 0.2s cubic-bezier(0.15, 0.85, 0.45, 1);
+  }
+
+  .has-custom-focus .steam-card:focus {
+    outline: none !important;
+    transform: scale(1.015) !important;
+    border-color: var(--card-accent, rgba(102, 192, 244, 0.6)) !important;
+    box-shadow: 0 0 20px var(--card-accent, rgba(102, 192, 244, 0.25)) !important;
+    z-index: 5;
+  }
+
+  .fav-card { width: 230px; height: 320px; }
+  .hist-card { width: 400px; height: 235px; display: flex; flex-direction: column; }
+
+  .fav-initials {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 72px;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+    z-index: 1;
+    line-height: 1;
+    letter-spacing: 8px;
+  }
+
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(8, 12, 17, 0.95) 0%, rgba(8, 12, 17, 0.2) 50%, rgba(0,0,0,0) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+  }
+  .card-label { font-size: 16px; font-weight: 800; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+
+  .hist-banner { width: 100%; height: 145px; flex-shrink: 0; }
+  .banner-placeholder { display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.25); background: #151d2a; }
+  .banner-placeholder svg { width: 40px; height: 40px; }
+  
+  .hist-meta {
+    flex: 1;
+    padding: 14px 18px;
+    background: #10151d;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+  }
+  .hist-title { font-size: 14px; font-weight: 700; color: #f0f4f8; margin-bottom: 4px; }
+  .hist-url { font-size: 12px; color: #6d7f92; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .hist-empty { color: #526375; font-size: 14px; padding: 30px; text-align: center; width: 100%; }
+  </style>
+</Layout>

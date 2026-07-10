@@ -1,0 +1,134 @@
+{
+  "app": {
+    "title": "PadBrowser",
+    "loading": "Cargando...",
+    "home": "Inicio"
+  },
+  "toolbar": {
+    "dragHandle": "Arrastra para mover",
+    "options": "Opciones",
+    "newTab": "Nueva pestaña",
+    "removeFavorite": "Quitar de favoritos",
+    "addFavorite": "Añadir a favoritos",
+    "downloads": "Descargas"
+  },
+  "nav": {
+    "home": "Inicio",
+    "back": "Atrás",
+    "forward": "Adelante",
+    "reload": "Recargar"
+  },
+  "urlbar": {
+    "placeholder": "Buscar o escribir URL..."
+  },
+  "tabs": {
+    "closeTab": "Cerrar pestaña",
+    "homeTitle": "Inicio"
+  },
+  "windowControls": {
+    "minimize": "Minimizar",
+    "restore": "Restaurar",
+    "maximize": "Maximizar",
+    "close": "Cerrar"
+  },
+  "loading": {
+    "text": "Cargando"
+  },
+  "keyboard": {
+    "backspace": "Borrar",
+    "close": "Cerrar",
+    "capslock": "Mayúsculas",
+    "space": "Espacio",
+    "enter": "Enter"
+  },
+  "options": {
+    "title": "Opciones",
+    "close": "Cerrar",
+    "language": "Idioma",
+    "spanish": "Español",
+    "langName": "Español",
+    "wallpaper": "Fondo de pantalla",
+    "virtualKeyboard": "Activar teclado virtual",
+    "consoleMode": "Modo consola",
+    "downloadFolder": "Carpeta de descargas",
+    "on": "ON",
+    "off": "OFF",
+    "quit": "Salir"
+  },
+  "downloads": {
+    "title": "Descargas",
+    "clear": "Limpiar",
+    "close": "Cerrar",
+    "empty": "Sin descargas",
+    "completed": "Completado",
+    "downloading": "Descargando...",
+    "openFile": "Abrir archivo",
+    "open": "Abrir",
+    "file": "Archivo"
+  },
+  "confirmQuit": {
+    "message": "Hay {count} descarga(s) activa(s).",
+    "question": "¿Cancelar las descargas y cerrar la aplicación?",
+    "confirm": "Cancelar y cerrar",
+    "cancel": "Seguir descargando"
+  },
+  "home": {
+    "title": "Inicio",
+    "searchPlaceholder": "Buscar o introducir URL...",
+    "favorites": "Favoritos",
+    "recentHistory": "Historial Reciente",
+    "noHistory": "No hay historial reciente"
+  },
+  "settings": {
+    "title": "Opciones",
+    "close": "Cerrar",
+    "consoleMode": "Modo consola",
+    "virtualKeyboard": "Teclado virtual",
+    "downloadFolder": "Carpeta de descargas",
+    "controlsGuide": "Guía de controles",
+    "language": "Idioma",
+    "quit": "Salir",
+    "on": "ON",
+    "off": "OFF",
+    "dash": "—",
+    "arrow": "→"
+  },
+  "tutorial": {
+    "title": "Guía de Controles - Opera GX Style",
+    "heading": "Guía de Controles",
+    "close": "Cerrar",
+    "closeTab": "Cierra pestaña actual",
+    "lt": "LT",
+    "prevTab": "Pestaña izquierda",
+    "lb": "LB",
+    "clickPointer": "Click y puntero",
+    "ls": "LS",
+    "navigate": "Saltar entre elementos",
+    "dpad": "DPAD",
+    "newTab": "Crear nueva pestaña",
+    "rt": "RT",
+    "nextTab": "Pestaña derecha",
+    "rb": "RB",
+    "y": "Y",
+    "x": "X",
+    "b": "B",
+    "a": "A",
+    "aClick": "Clic",
+    "bBack": "Atrás",
+    "xForward": "Adelante",
+    "yUrl": "URL",
+    "rs": "RS",
+    "scroll": "Scroll fluido",
+    "submit": "¡Entendido, a navegar!"
+  },
+  "downloadsPage": {
+    "title": "Descargas",
+    "clear": "Limpiar",
+    "close": "Cerrar",
+    "completed": "Completado",
+    "downloading": "Descargando...",
+    "open": "Abrir",
+    "empty": "Sin descargas",
+    "file": "Archivo"
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "app": {
+    "title": "PadBrowser",
+    "loading": "Loading...",
+    "home": "Home"
+  },
+  "toolbar": {
+    "dragHandle": "Drag to move",
+    "options": "Options",
+    "newTab": "New tab",
+    "removeFavorite": "Remove from favorites",
+    "addFavorite": "Add to favorites",
+    "downloads": "Downloads"
+  },
+  "nav": {
+    "home": "Home",
+    "back": "Back",
+    "forward": "Forward",
+    "reload": "Reload"
+  },
+  "urlbar": {
+    "placeholder": "Search or enter URL..."
+  },
+  "tabs": {
+    "closeTab": "Close tab",
+    "homeTitle": "Home"
+  },
+  "windowControls": {
+    "minimize": "Minimize",
+    "restore": "Restore",
+    "maximize": "Maximize",
+    "close": "Close"
+  },
+  "loading": {
+    "text": "Loading"
+  },
+  "keyboard": {
+    "backspace": "Backspace",
+    "close": "Close",
+    "capslock": "Caps Lock",
+    "space": "Space",
+    "enter": "Enter"
+  },
+  "options": {
+    "title": "Options",
+    "close": "Close",
+    "language": "Language",
+    "spanish": "Spanish",
+    "langName": "English",
+    "wallpaper": "Wallpaper",
+    "virtualKeyboard": "Enable virtual keyboard",
+    "consoleMode": "Console mode",
+    "downloadFolder": "Download folder",
+    "on": "ON",
+    "off": "OFF",
+    "quit": "Quit"
+  },
+  "downloads": {
+    "title": "Downloads",
+    "clear": "Clear",
+    "close": "Close",
+    "empty": "No downloads",
+    "completed": "Completed",
+    "downloading": "Downloading...",
+    "openFile": "Open file",
+    "open": "Open",
+    "file": "File"
+  },
+  "confirmQuit": {
+    "message": "There {count, plural, one {is # active download} other {are # active downloads}}.",
+    "question": "Cancel downloads and close the application?",
+    "confirm": "Cancel and close",
+    "cancel": "Keep downloading"
+  },
+  "home": {
+    "title": "Home",
+    "searchPlaceholder": "Search or enter URL...",
+    "favorites": "Favorites",
+    "recentHistory": "Recent History",
+    "noHistory": "No recent history"
+  },
+  "settings": {
+    "title": "Options",
+    "close": "Close",
+    "consoleMode": "Console mode",
+    "virtualKeyboard": "Virtual keyboard",
+    "downloadFolder": "Download folder",
+    "controlsGuide": "Controls guide",
+    "language": "Language",
+    "quit": "Quit",
+    "on": "ON",
+    "off": "OFF",
+    "dash": "—",
+    "arrow": "→"
+  },
+  "tutorial": {
+    "title": "Controls Guide",
+    "heading": "Controls Guide",
+    "close": "Close",
+    "closeTab": "Close current tab",
+    "lt": "LT",
+    "prevTab": "Previous tab",
+    "lb": "LB",
+    "clickPointer": "Click & pointer",
+    "ls": "LS",
+    "navigate": "Navigate between elements",
+    "dpad": "DPAD",
+    "newTab": "Create new tab",
+    "rt": "RT",
+    "nextTab": "Next tab",
+    "rb": "RB",
+    "y": "Y",
+    "x": "X",
+    "b": "B",
+    "a": "A",
+    "aClick": "Click",
+    "bBack": "Back",
+    "xForward": "Forward",
+    "yUrl": "URL",
+    "rs": "RS",
+    "scroll": "Smooth scroll",
+    "submit": "Got it, let's go!"
+  },
+  "downloadsPage": {
+    "title": "Downloads",
+    "clear": "Clear",
+    "close": "Close",
+    "completed": "Completed",
+    "downloading": "Downloading...",
+    "open": "Open",
+    "empty": "No downloads",
+    "file": "File"
+  }
+}

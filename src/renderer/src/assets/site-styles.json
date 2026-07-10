@@ -1,0 +1,14 @@
+{
+  "_default": {
+    "accent": "#66c0f4",
+    "accentGlow": "rgba(102,192,244,0.5)"
+  },
+  "app-home": {
+    "accent": "#ff2255",
+    "accentGlow": "rgba(255,34,85,0.5)"
+  },
+  "youtube.com": {
+    "accent": "#ff2255",
+    "accentGlow": "rgba(255,34,85,0.5)"
+  }
+}
