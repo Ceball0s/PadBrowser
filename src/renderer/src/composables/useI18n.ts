@@ -4,7 +4,7 @@ import en from '../i18n/en.json'
 
 type Lang = 'es' | 'en'
 
-const locale = ref<Lang>('es')
+const locale = ref<Lang>('en')
 
 const messages: Record<Lang, Record<string, any>> = { es, en }
 

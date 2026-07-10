@@ -8,6 +8,13 @@ import { loadConfig } from './config'
 import { getDownloads } from './downloads'
 import { DEFAULT_FAVORITES } from './config'
 
+// @ts-expect-error - JSON imports are resolved by Vite
+import en from '../renderer/src/i18n/en.json'
+// @ts-expect-error - JSON imports are resolved by Vite
+import es from '../renderer/src/i18n/es.json'
+
+const i18nMessages: Record<string, Record<string, unknown>> = { en, es }
+
 let mainWindow: BrowserWindow | null = null
 
 function createWindow(): void {
@@ -77,18 +84,7 @@ function injectInitData(html: string, data: unknown): string {
 }
 
 function injectI18nData(html: string, locale: string): string {
-  let translations: Record<string, unknown> = {}
-  try {
-    const i18nDir = join(__dirname, '../../src/renderer/src/i18n')
-    translations = JSON.parse(readFileSync(join(i18nDir, `${locale}.json`), 'utf-8'))
-  } catch {
-    try {
-      const i18nDir = join(__dirname, '../../src/renderer/src/i18n')
-      translations = JSON.parse(readFileSync(join(i18nDir, 'es.json'), 'utf-8'))
-    } catch {
-      // fallback: empty
-    }
-  }
+  const translations = i18nMessages[locale] || i18nMessages['en'] || {}
   const json = JSON.stringify(translations)
   const script = `<script>window.__translations=${json};window.__t=function(k){var p=k.split('.'),o=window.__translations;for(var i=0;i<p.length;i++){if(o===null||o===undefined)return k;o=o[p[i]];if(o===undefined)return k}return typeof o==='string'?o:k};document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');var v=window.__t(k);if(v!==k)el.textContent=v});document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el){var k=el.getAttribute('data-i18n-placeholder');var v=window.__t(k);if(v!==k)el.setAttribute('placeholder',v)});document.querySelectorAll('[data-i18n-title]').forEach(function(el){var k=el.getAttribute('data-i18n-title');var v=window.__t(k);if(v!==k)el.setAttribute('title',v)});document.querySelectorAll('[data-i18n-arialabel]').forEach(function(el){var k=el.getAttribute('data-i18n-arialabel');var v=window.__t(k);if(v!==k)el.setAttribute('aria-label',v)})});</script>`
   return html.replace('</head>', script + '</head>')
@@ -98,7 +94,7 @@ function servePage(page: string, data: unknown, locale?: string): Response {
   try {
     let html = readFileSync(join(pagesDir(), page), 'utf-8')
     html = injectInitData(html, data)
-    html = injectI18nData(html, locale || 'es')
+    html = injectI18nData(html, locale || 'en')
     return new Response(html, { headers: { 'content-type': 'text/html' } })
   } catch {
     return new Response('Not Found', { status: 404 })
@@ -114,7 +110,7 @@ app.whenReady().then(() => {
         favorites: cfg.favorites || DEFAULT_FAVORITES,
         backgroundImage: cfg.backgroundImage || 'home-bg.jpg',
         recentHistory: recentHistory.map(e => ({ url: e.url, title: e.title, screenshot: e.screenshot }))
-      }, cfg.locale || 'es')
+      }, cfg.locale || 'en')
     }
     return new Response('Not Found', { status: 404 })
   })
@@ -128,13 +124,13 @@ app.whenReady().then(() => {
         autoKeyboard: false,
         backgroundImage: cfg.backgroundImage || 'home-bg.jpg',
         downloadFolder: cfg.downloadFolder || ''
-      }, cfg.locale || 'es')
+      }, cfg.locale || 'en')
     }
     if (url === 'app-drift://downloads') {
-      return servePage('downloads.html', getDownloads().map((d) => ({ id: d.id, name: d.name, path: d.path, received: d.received, total: d.total, done: d.done })), cfg.locale || 'es')
+      return servePage('downloads.html', getDownloads().map((d) => ({ id: d.id, name: d.name, path: d.path, received: d.received, total: d.total, done: d.done })), cfg.locale || 'en')
     }
     if (url === 'app-drift://tutorial') {
-      return servePage('tutorial.html', {}, cfg.locale || 'es')
+      return servePage('tutorial.html', {}, cfg.locale || 'en')
     }
     return new Response('Not Found', { status: 404 })
   })

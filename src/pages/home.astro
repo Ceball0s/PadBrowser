@@ -126,7 +126,13 @@ import Layout from '../components/Layout.astro'
     function buildHistoryTrack() {
       var filtered = recentHistory.filter(function(item) { return !isInternal(item.url); });
       if (filtered.length === 0) {
-        return '<div class="hist-empty">' + window.__t('home.noHistory') + '</div>';
+        return '<div class="hist-empty">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:40px;height:40px;margin-bottom:12px;opacity:0.3;">' +
+            '<circle cx="12" cy="12" r="10"/>' +
+            '<polyline points="12 6 12 12 16 14"/>' +
+          '</svg>' +
+          '<p>' + window.__t('home.noHistory') + '</p>' +
+        '</div>';
       }
       return filtered.map(function(item, idx) {
         var bannerHtml;
@@ -388,6 +394,7 @@ import Layout from '../components/Layout.astro'
   .hist-title { font-size: 14px; font-weight: 700; color: #f0f4f8; margin-bottom: 4px; }
   .hist-url { font-size: 12px; color: #6d7f92; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  .hist-empty { color: #526375; font-size: 14px; padding: 30px; text-align: center; width: 100%; }
+  .hist-empty { color: #526375; font-size: 14px; padding: 30px; text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .hist-empty p { margin: 0; }
   </style>
 </Layout>

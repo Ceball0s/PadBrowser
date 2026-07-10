@@ -4,6 +4,8 @@ A TV-friendly browser built with Electron, designed for Xbox/PlayStation gamepad
 
 ![Tutorial screenshot](screenshots/tutorial.png)
 
+![Home screenshot](screenshots/home.png)
+
 ## Features
 
 - Full gamepad navigation (LS pointer, RT/LT tabs, etc.)
